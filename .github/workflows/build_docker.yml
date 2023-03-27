@@ -1,13 +1,10 @@
 name: build_docker
 
 on:
-  repository_dispatch:
-  workflow_dispatch:
-    inputs:
-      ssh:
-        description: 'SSH connection to Actions'
-        required: false
-        default: 'false'
+  push:
+    branches: [main]
+  release:
+    types: [created] # 表示在创建新的 Release 时触发
 
 jobs:
   build_docker:
@@ -40,4 +37,5 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
           tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:${{ github.ref_name }}
             ${{ secrets.DOCKERHUB_USERNAME }}/chatgpt-web:latest
